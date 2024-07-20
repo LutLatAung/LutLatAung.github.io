@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Car Accessories</title>
-    <link rel="stylesheet" href="/css/global.css"> 
+    <link rel="stylesheet" href="/css/global.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" 
-
-    integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous"> 
-
+    integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 </head>
 <body>
     <h1>Car Accessories</h1>
- 
+
     <h3>Add Accessory</h3>
     <select id="accessory-select">
         <option value="10">Car Cover</option>
@@ -19,62 +17,71 @@
         <option value="30">Phone Holder</option>
     </select>
     <input type="number" id="amount-input" min="1" value="1">
-    <button class="add-button" onclick="addItem()" >Add</button>
+    <button class="add-button">Add</button>
 
-    
-    
- 
- 
     <h2>Product List</h2>
-    <table id="product-list">
-        <tr>
-            <th>Accessory</th>
-            <th>Amount</th>
-            <th>Price</th>
-        </tr>
+    <table id="product-list" class="table">
+        <thead>
+            <tr>
+                <th>Accessory</th>
+                <th>Amount</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
     </table>
-
 
     <h1>VAT Calculator</h1>
     <a>Total Price: <span id="total-price">$0</span></a>
     <br>
     <a>VAT (7%): <span id="vat-amount">$0</span></a>
     <br>
-
     <a>Total Price with Vat: <span id="total-with-vat">$0</span></a>
-    
- 
+
     <script>
     $(document).ready(function() {
-        function addItem() {
-            var selectedAccessory = $("#accessory-select option:selected").text();
-            var selectedAccessoryValue = $("#accessory-select").val();
-            var amount = $("#amount-input").val();
-            var productTable = $("#product-list");
-            
-            var row = $("<tr></tr>");
-            var accessoryCell = $("<td></td>").text(selectedAccessory);
-            var amountCell = $("<td></td>").text(amount);
-            var priceCell = $("<td></td>").text("$" + (parseFloat(selectedAccessoryValue) * amount));
-            
-            row.append(accessoryCell, amountCell, priceCell);
-            productTable.append(row);
-            
+        function updateTotals() {
             var totalPrice = 0;
-            productTable.find("tr:gt(0)").each(function() {
+            $("#product-list tbody tr").each(function() {
                 var price = parseFloat($(this).find("td:eq(2)").text().substring(1));
                 totalPrice += price;
             });
-            
+
             var vatRate = 0.07;
             var vatAmount = totalPrice * vatRate;
             var totalWithVAT = totalPrice + vatAmount;
-            
+
             $("#total-price").text("$" + totalPrice.toFixed(2));
             $("#vat-amount").text("$" + vatAmount.toFixed(2));
             $("#total-with-vat").text("$" + totalWithVAT.toFixed(2));
         }
-        
+
+        function addItem() {
+            var selectedAccessory = $("#accessory-select option:selected").text();
+            var selectedAccessoryValue = $("#accessory-select").val();
+            var amount = $("#amount-input").val();
+            var productTable = $("#product-list tbody");
+
+            var row = $("<tr></tr>");
+            var accessoryCell = $("<td></td>").text(selectedAccessory);
+            var amountCell = $("<td></td>").text(amount);
+            var priceCell = $("<td></td>").text("$" + (parseFloat(selectedAccessoryValue) * amount).toFixed(2));
+            var deleteCell = $("<td></td>");
+            var deleteButton = $("<button>Delete</button>").addClass("btn btn-danger delete-button");
+
+            deleteButton.click(function() {
+                row.remove();
+                updateTotals();
+            });
+
+            deleteCell.append(deleteButton);
+            row.append(accessoryCell, amountCell, priceCell, deleteCell);
+            productTable.append(row);
+
+            updateTotals();
+        }
+
         $(".add-button").click(addItem);
     });
     </script>
