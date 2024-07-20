@@ -15,3 +15,7 @@ tr:nth-child(even) {
     width: 200px;
     border-radius: 6px;
 }
+
+html{
+    margin-left: 30px;
+}
