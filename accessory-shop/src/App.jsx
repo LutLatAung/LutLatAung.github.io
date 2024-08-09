@@ -6,13 +6,20 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import DataTable from './components/DataTable';
 import productList from './accessory-products.json';
+import { useLocalStorage } from 'react-use';
+import { TotalPriceContext } from './context.jsx';
+
 
 function App() {
   const productRef = useRef();
   const quantityRef = useRef();
   const [price, setPrice] = useState(productList[0].price);
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [filteredSelectedItems, setFilteredSelectedItems] = useState(null);
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  
+
+  const [selectedItems, setSelectedItems, remove] = useLocalStorage('selectedItems', []);   
+  const [filteredSelectedItems, setFilteredSelectedItems] = useState(selectedItems);
   const [sortOrder, setSortOrder] = useState(null); 
 
   const handleSelect = () => {
@@ -64,7 +71,7 @@ function App() {
   };
 
   return (
-    <>
+    <TotalPriceContext.Provider value={{totalPrice, setTotalPrice}}>
       <Container>
         <Row>
           <Col xs={6}>
@@ -112,7 +119,8 @@ function App() {
           </Col>
         </Row>
       </Container>
-    </>
+      <h1>Total Price is = {totalPrice.toFixed(2)}</h1>
+    </TotalPriceContext.Provider>
   );
 }
 

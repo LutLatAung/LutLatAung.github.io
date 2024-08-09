@@ -1,14 +1,19 @@
 import React, { useRef, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
+import { TotalPriceContext } from '../context.jsx';
 
 const DataTable = ({ data, onDelete, onSearch, onSort }) => {
-  const sRef = useRef();
+  const { totalPrice, setTotalPrice } = React.useContext(TotalPriceContext)
+    let sum = 0
 
-  
   useEffect(() => {
-    console.table(data); 
-  }, [data]); 
+    if (data)
+        sum = data.reduce((acc, item) => acc + item.price * item.quantity, 0)
+    setTotalPrice(sum)
+})
+
+  const sRef = useRef();
 
   const handleDelete = (index) => {
     onDelete(index);
