@@ -11,7 +11,6 @@ export default function ErrorPage() {
       <p>
         <i>{error.statusText || error.message}</i>
       </p>
-      <button onClick={() => window.location.href = "/routing-app/"}>Go to Main Page</button>
-    </div>
+      </div>
   );
 }
